@@ -29,6 +29,25 @@ import cnn_util
 import flags
 from cnn_util import log_fn
 
+### to support dmo, hsj  ###
+dmo_fs_lib="/memverge/home/songjue/tools/lib/dmo_file_system.so"
+def LoadFileSystem():
+    try:
+        print("Loading DMO FileSystem...", end="")
+        tf.load_file_system_library(dmo_fs_lib)
+        print("[OK]")
+        return True
+    except Exception as e:
+        print("[ERROR]")
+        print(e)
+    return False
+
+'''
+if tf.app.flags.FLAGS.enable_dmo == True: 
+    import sys
+    if LoadFileSystem() == False:
+        sys.exit(-1)
+'''
 
 flags.define_flags()
 for name in flags.param_specs.keys():
@@ -47,6 +66,15 @@ def main(positional_arguments):
 
   params = benchmark_cnn.make_params_from_flags()
   params = benchmark_cnn.setup(params)
+
+  import sys
+  if params.enable_dmo == True:
+    if LoadFileSystem() == False:
+        sys.exit(-1)
+    else :
+        print("\n*******DMO enabled********\n")
+  #      sys.exit(0)
+
   bench = benchmark_cnn.BenchmarkCNN(params)
 
   tfversion = cnn_util.tensorflow_version_tuple()
