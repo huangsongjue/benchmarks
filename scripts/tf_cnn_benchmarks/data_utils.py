@@ -29,6 +29,7 @@ from tensorflow.python.platform import gfile
 def build_prefetch_image_processing(height, width, batch_size, num_splits,
                                     preprocess_fn, cpu_device, params,
                                     gpu_devices, data_type, dataset):
+
   """"Returns FunctionBufferingResources that do image pre(processing)."""
   with tf.device(cpu_device):
     if params.eval:
@@ -37,7 +38,7 @@ def build_prefetch_image_processing(height, width, batch_size, num_splits,
       subset = 'train'
 
     function_buffering_resources = []
-    remote_fn, args = minibatch_fn(
+    remote_fn, args = minibatch_fn(params, #hsj
         height=height,
         width=width,
         batch_size=batch_size,
@@ -48,6 +49,7 @@ def build_prefetch_image_processing(height, width, batch_size, num_splits,
         train=(not params.eval),
         cache_data=params.cache_data,
         num_threads=params.datasets_num_private_threads)
+#        num_threads=params.datasets_num_private_threads) 
     for device_num in range(len(gpu_devices)):
       with tf.device(gpu_devices[device_num]):
         buffer_resource_handle = prefetching_ops.function_buffering_resource(
@@ -68,7 +70,8 @@ def get_images_and_labels(function_buffering_resource, data_type):
       output_types=[data_type, tf.int32])
 
 
-def create_iterator(batch_size,
+def create_iterator(params, #hsj
+                    batch_size,
                     num_splits,
                     batch_size_per_split,
                     preprocess_fn,
@@ -89,6 +92,11 @@ def create_iterator(batch_size,
           tf.data.TFRecordDataset, cycle_length=10))
   if cache_data:
     ds = ds.take(1).cache().repeat()
+
+  ##hsj
+  if train:
+    ds = ds.shard(params.num_shards, params.shard_idx)
+  ##
   counter = tf.data.Dataset.range(batch_size)
   counter = counter.repeat()
   ds = tf.data.Dataset.zip((ds, counter))
@@ -115,12 +123,14 @@ def create_iterator(batch_size,
   return ds_iterator
 
 
-def minibatch_fn(height, width, batch_size, num_splits, preprocess_fn, dataset,
-                 subset, train, cache_data, num_threads):
+def minibatch_fn(params, #added params, hsj
+                 height, width, batch_size, num_splits, preprocess_fn, dataset,
+                 subset, train, cache_data, num_threads): 
   """Returns a function and list of args for the fn to create a minibatch."""
   batch_size_per_split = batch_size // num_splits
   with tf.name_scope('batch_processing'):
-    ds_iterator = create_iterator(batch_size, num_splits, batch_size_per_split,
+    ds_iterator = create_iterator(params, #hsj
+                                  batch_size, num_splits, batch_size_per_split,
                                   preprocess_fn, dataset, subset, train,
                                   cache_data, num_threads)
     ds_iterator_string_handle = ds_iterator.string_handle()

@@ -94,6 +94,14 @@ flags.DEFINE_string('model', 'trivial',
 # Under the benchmarking mode, user can specify whether nor not to use
 #   the forward-only option, which will only compute the loss function.
 #   forward-only cannot be enabled with eval at the same time.
+
+##hsj
+flags.DEFINE_integer('num_shards', 1, 'num of shards' )
+flags.DEFINE_integer('shard_idx', 0, 'index of shard for the current task' )
+flags.DEFINE_integer('save_model_steps', 100, 'How frequent to save checkpoint.' )
+flags.DEFINE_boolean('enable_dmo', False, 'whether use dmo')
+##
+
 flags.DEFINE_boolean('eval', False, 'whether use eval or benchmarking')
 flags.DEFINE_integer('eval_interval_secs', 0,
                      'How often to run eval on saved checkpoints. Usually the '
@@ -1062,6 +1070,9 @@ class BenchmarkCNN(object):
       ValueError: Unsupported params settings.
     """
     self.params = params
+#    print("\n\n=====>params ", params)
+#    exit(0)
+
     self.dataset = dataset or datasets.create_dataset(self.params.data_dir,
                                                       self.params.data_name)
     self.model = model or model_config.get_model_config(self.params.model,
@@ -1881,6 +1892,11 @@ class BenchmarkCNN(object):
         if summary_str is not None and is_chief:
           sv.summary_computed(sess, summary_str)
         local_step += 1
+##hsj if save_model_steps==0, skip checkpointing 
+        if (self.params.save_model_steps != 0 and local_step % self.params.save_model_steps == 0 and local_step > 0 and is_chief):
+           print("\n\nsaving ckpt at ", local_step, "\n\n")
+           sv.saver.save(sess, sv.save_path, sv.global_step)
+##
       loop_end_time = time.time()
       # Waits for the global step to be done, regardless of done_fn.
       if global_step_watcher:
@@ -2196,6 +2212,7 @@ class BenchmarkCNN(object):
               self.devices), self.image_preprocessor.parse_and_preprocess,
           self.cpu_device, self.params, self.devices,
           get_data_type(self.params), self.dataset)
+#          get_data_type(self.params), self.dataset)
 
     update_ops = None
 
