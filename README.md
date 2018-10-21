@@ -4,7 +4,7 @@ This repository contains various TensorFlow benchmarks. Currently, it consists o
 1. [scripts/tf_cnn_benchmarks](https://github.com/tensorflow/benchmarks/tree/master/scripts/tf_cnn_benchmarks): The TensorFlow CNN benchmarks contain benchmarks for several convolutional neural networks.
 2. [scripts/keras_benchmarks](https://github.com/tensorflow/benchmarks/tree/master/scripts/keras_benchmarks): The Keras benchmarks contain benchmarks for several models using Keras. Note this project is deprecated and unmaintained.
 
-## 3.  NOTES: 
+## 3.  NOTES: all code changes is on branch cnn_tf_v1.10_compatible as current dmo driver now work with tf later than v1.10.1
 
 ### code changes made to support dmo 
 
@@ -13,12 +13,11 @@ This repository contains various TensorFlow benchmarks. Currently, it consists o
 ### must set --data_name=imagenet to run training
 
 ### Bugs in branch cnn_tf_v1.10_compatible:
-        no save_model_steps and save_model_secs doesn't work!
+        no --save_model_steps and --save_model_secs doesn't work!
 
 ### New flags added in tensorflow/benchmarks/scripts/tf_cnn_benchmarks/benchmark_cnn.py, marked as 'hsj'
     --save_model_steps  #if == 0, skip checkpointing, used with 'forward_only' to do inference.
     --enable_dmo
-
 
 ### Run bigisland_run_bench_hdfs.sh as user 'dmo'
 
