@@ -6,7 +6,7 @@ This repository contains various TensorFlow benchmarks. Currently, it consists o
 
 ## 3.  NOTES: all code changes is on branch cnn_tf_v1.10_compatible as current dmo driver now work with tf later than v1.10.1
 
-### - code changes made to support dmo 
+### code changes made to support dmo 
 
 ### model could be resnet50, inception3, vgg16, and alexnet 
 
