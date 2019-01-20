@@ -502,8 +502,8 @@ class RecordInputImagePreprocessor(BaseImagePreprocess):
     image = self.preprocess(image_buffer, bbox, batch_position)
     return (label_index, image)
 
-  def minibatch(self, dataset, subset, use_datasets, cache_data,
-                shift_ratio=-1):
+  def minibatch(self, params, dataset, subset, use_datasets, cache_data,
+                shift_ratio=-1): 
     if shift_ratio < 0:
       shift_ratio = self.shift_ratio
     with tf.name_scope('batch_processing'):
@@ -512,6 +512,7 @@ class RecordInputImagePreprocessor(BaseImagePreprocess):
       labels = [[] for _ in range(self.num_splits)]
       if use_datasets:
         ds_iterator = data_utils.create_iterator(
+            params, #hsj
             self.batch_size, self.num_splits, self.batch_size_per_split,
             self.parse_and_preprocess, dataset, subset, self.train, cache_data)
         for d in xrange(self.num_splits):

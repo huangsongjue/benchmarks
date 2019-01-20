@@ -2050,11 +2050,12 @@ class BenchmarkCNN(object):
       input_producer_op = []
       input_producer_stages = []
       images_splits, labels_splits = self.image_preprocessor.minibatch(
+          self.params,  #hsj
           self.dataset,
           subset=subset,
           use_datasets=self.params.use_datasets,
           cache_data=self.params.cache_data,
-          shift_ratio=shift_ratio)
+          shift_ratio=shift_ratio) 
       images_shape = images_splits[0].get_shape()
       labels_shape = labels_splits[0].get_shape()
       for device_num in range(len(self.devices)):
