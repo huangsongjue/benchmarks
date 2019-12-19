@@ -1,0 +1,16 @@
+### usage: distributed_train_dmo.sh <ps|wk> num_tasks task_index
+
+______________________________________________________________________
+##start 2 workers on bigisland (2 GPUs):
+
+#term 0
+distributed_train_dmo.sh ps 2 0  #2 0 not used for ps
+
+#term 1
+export CUDA_VISIBLE_DEVICES=0
+distributed_train_dmo.sh wk 2 0  #2 workers, worker 0
+
+#term 2
+export CUDA_VISIBLE_DEVICES=1
+distributed_train_dmo.sh wk 2 1  #2 workers, worker 1
+
