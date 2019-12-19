@@ -24,7 +24,7 @@ SAVE_MODEL_STEPS=200
 WORKERS='10.50.0.32:54321,10.50.0.19:54321'
 PS='10.50.0.32:6543'
 
-cd /home/cephagent/benchmarks/scripts/tf_cnn_benchmarks
+cd ../../scripts/tf_cnn_benchmarks
 
 TASK_INDEX=$3
 
