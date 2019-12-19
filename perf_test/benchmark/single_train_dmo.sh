@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd /home/cephagent/benchmarks/scripts/tf_cnn_benchmarks
+cd ../../scripts/tf_cnn_benchmarks
 
 export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
 num_gpus=8
