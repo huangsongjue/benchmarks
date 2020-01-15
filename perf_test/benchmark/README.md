@@ -55,7 +55,7 @@ Note:
     - As of branch cnn_tf_v1.13_compatible functions like add_backbone_saver/load_backbone_model have Not been implemented, so options of tf_cnn_benchmarks.py like --backbone_model_path can not function!
     
 Note: 
-    Use bmp instead of jpeg, inference(and maybe trainning as well) is 2~3x faster. To use bmp in inference:
+    Use bmp instead of jpeg, inference(and maybe trainning as well) is 2~3x faster in test using pre-trained ResNet50 (docker nvcr.io/nvidia/tensorflow:19.12-tf1-py3), but no effects in this benchmark(!?). To use bmp in inference:
     1. create bmp tfrecord file (see evernote notes)
     2. make changes to benchmarks/scripts/tf_cnn_benchmarks/preprocessing.py:
         . in BaseImagePreprocessor::__init__(...) Self.train = ""
