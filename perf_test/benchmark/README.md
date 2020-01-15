@@ -41,3 +41,23 @@ distributed_train_dmo.sh wk  0
 ```
 maui: distributed_train_dmo.sh wk  1
 ```
+
+#### To resize image for resnet(say 224 -> 64), change models/resnet_model.py  
+```
+class ResnetModel():
+...
+  __init__(...)
+    super(ResnetModel, self).__init__(model, 224...
+to:
+    super(ResnetModel, self).__init__(model, 64..
+```
+Note:
+    - As of branch cnn_tf_v1.13_compatible functions like add_backbone_saver/load_backbone_model have Not been implemented, so options of tf_cnn_benchmarks.py like --backbone_model_path can not function!
+    
+Note: 
+    Use bmp instead of jpeg, inference(and maybe trainning as well) is 2~3x faster. To use bmp in inference:
+    1. create bmp tfrecord file (see evernote notes)
+    2. make changes to benchmarks/scripts/tf_cnn_benchmarks/preprocessing.py:
+        . in BaseImagePreprocessor::__init__(...) Self.train = ""
+        . change tf.image.decode_jpeg() to tf.image.decode_bmp()
+
